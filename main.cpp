@@ -23,7 +23,7 @@ int main()
      * Déclaration des constantes locales
      */
     const unsigned TABLEAU_TAILLE_MIN           = 2;
-    const unsigned TABLEAU_TAILLE_MAX           = 100;
+    const unsigned TABLEAU_TAILLE_MAX           = 300;
     const string MESSAGE_DEMANDER_NOMBRE        = "Entrez le nombre de valeurs";
     const string MESSAGE_INITIALISATION_TABLEAU = "initialisation du tableau";
     const string MESSAGE_CRIBLAGE_TABLEAU       = "Criblage du tableau";

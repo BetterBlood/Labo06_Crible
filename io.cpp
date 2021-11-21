@@ -147,7 +147,7 @@ void AfficherNombresPremiers(const char tab[], unsigned taille, char caractereAC
 {
     string listeDesNombresPremier = "";
     unsigned nbrDeNombresPremier = 0;
-    int dernierI = 0;
+    int dernierI = 2; // car le premier nombre premier est 2 (donc première fois que dernierI est initialiser)
 
     for (unsigned i = 0; i < taille; ++i)
     {
@@ -160,7 +160,7 @@ void AfficherNombresPremiers(const char tab[], unsigned taille, char caractereAC
             dernierI = i;
         }
 
-        if (nbrDeNombresPremier%NOMBRES_PAR_LIGNE == 0 && dernierI == i)
+        if (nbrDeNombresPremier % NOMBRES_PAR_LIGNE == 0 && dernierI == i)
         {
             listeDesNombresPremier.append("\n");
         }
