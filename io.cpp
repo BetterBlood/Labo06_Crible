@@ -15,6 +15,7 @@
  ----------------------------------------------------------------------------------- 
 */
 #include "io.h"
+#include <cmath>
 
 using namespace std;
 
@@ -54,7 +55,15 @@ int LireUnNombre(int borneMin,
 		erreur = cin.fail() || nombreLu < borneMin || nombreLu > borneMax;
 		cin.clear();
 		VIDER_BUFFER();
-	} while(erreur && cout << msgErreur);
+
+        // La méthode Afficher retourne void, donc on ne peut pas l'utiliser dans la clause
+        // du while pour afficher un message en cas d'erreur
+        if(erreur)
+        {
+            Afficher(msgErreur);
+        }
+
+	} while(erreur);
 
 	return nombreLu;
 }
@@ -64,24 +73,37 @@ int LireUnNombre(int borneMin,
 /// \param tableau Tableau à lire
 /// \param taille Taille du tableau
 void AfficherTableau(char tableau[],
-                     int taille)
+                     unsigned int taille)
 {
+    bool retourLigne = false;
+
 	// Parcourir toutes les cases du tableau
 	for(int i = 0; i < taille; ++i)
 	{
-		// Afficher la valeur à l'index i
-		Afficher(tableau[i], false);
-
-		// Déterminer s'il nous faudra faire un saut de ligne. Sinon, rajouter un espace
-		if (i % NOMBRES_PAR_LIGNE == 0)
+		// Déterminer s'il nous faudra faire un saut de ligne
+        // Si on en a besoin, alors on affecte la variable booléenne pour vérifier plus tard si on a besoin d'un espace
+        // 0 est multiple de n'importe quel nombre, donc on vérifie que i > 0
+		if (i > 0 && i % NOMBRES_PAR_LIGNE == 0)
 		{
+            retourLigne = true;
 			NouvelleLigne();
 		}
 		else
 		{
-			Afficher(CARACTERE_ESPACE, false);
+            retourLigne = false;
 		}
+
+        // Afficher la valeur à l'index i
+        Afficher(tableau[i], false);
+
+        // Afficher l'espace après la valeur que si on n'a pas besoin de faire un retour de ligne
+        //if(!retourLigne) {
+            Afficher(CARACTERE_ESPACE, false);
+        //}
 	}
+
+    // Ajouter une nouvelle ligne pour terminer l'affichage du tableau
+    NouvelleLigne();
 }
 
 
@@ -110,8 +132,64 @@ void Afficher(const string &message,
 /// Affiche un caractère dans la console. Fonction surchargée
 /// \param caractere Caractère à Afficher
 /// \param retourLigne Est-ce qu'il faut faire un retour de ligne?
-void Afficher(const char caractere,
+void Afficher(char caractere,
               bool retourLigne)
 {
 	Afficher(string(1, caractere), retourLigne);
+}
+
+
+/// AfficherNombresPremiers affiche l'indice + 1de chaque caractère passé en param
+/// \param tab
+/// \param taille
+/// \param caractereAComparer
+void AfficherNombresPremiers(const char tab[], unsigned taille, char caractereAComparer)
+{
+    string listeDesNombresPremier = "";
+    unsigned nbrDeNombresPremier = 0;
+    int dernierI = 0;
+
+    for (unsigned i = 0; i < taille; ++i)
+    {
+        if (tab[i] == caractereAComparer)
+        {
+            listeDesNombresPremier.append(EspaceNecessairePourAffichage(i + 1));
+            listeDesNombresPremier.append(to_string(i + 1));
+
+            ++nbrDeNombresPremier;
+            dernierI = i;
+        }
+
+        if (nbrDeNombresPremier%NOMBRES_PAR_LIGNE == 0 && dernierI == i)
+        {
+            listeDesNombresPremier.append("\n");
+        }
+    }
+
+    // TODO: afficher "nbres premiers" au singulier si nbrDeNombresPremier == 1
+    Afficher(MESSAGE_NOMBRES_PREMIER_1 + to_string(nbrDeNombresPremier) + MESSAGE_NOMBRES_PREMIER_2, true);
+    Afficher(listeDesNombresPremier, true);
+}
+
+
+/// EspaceNecessairePourAffichage permet d'obtenir le nombre d'espace nécessaire pour l'affichage de chiffre
+/// \param chiffreAffiche
+/// \param maxDigit
+/// \return
+// TODO: rennomer fonction
+string EspaceNecessairePourAffichage(int chiffreAffiche, int maxDigit)
+{
+    if (chiffreAffiche <= 0)
+    {
+        return " ";
+    }
+
+    string nbrEspace = "";
+
+    for (int i = maxDigit - log10(chiffreAffiche); i > 0; --i)
+    {
+        nbrEspace += " ";
+    }
+
+    return nbrEspace;
 }

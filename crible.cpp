@@ -18,22 +18,21 @@
  *  params:
  *      - taille
  *  retourne:
- *      - int[]
+ *      - char*
  */
 
 /// IninitialiserTableau
 /// \param taille
 /// \return
-char* IninitialiserTableau(const unsigned taille)
+void InitialiserTableau(char tableau[],
+                        unsigned taille)
 {
-	char tab[taille];
-
+    // Initialiser tous les indices
 	for (int i = 0; i < taille; ++i)
 	{
-		tab[i] = NBR_NON_PREMIER;
+        // Lors de l'initialisation, on part du principe que tous les indices réprésentent un nombre premier
+		tableau[i] = NBR_PREMIER;
 	}
-
-	return (char*)tab;
 }
 
 
@@ -45,14 +44,23 @@ char* IninitialiserTableau(const unsigned taille)
  *      - multiple
  */
 /// EliminerMultiples
-/// \param tab
+/// \param tableau
 /// \param taille
 /// \param multiple
-void EliminerMultiples(char tab[], const unsigned taille, const unsigned multiple)
+void EliminerMultiples(char tableau[],
+                       unsigned taille,
+                       unsigned indiceNbrPremier)
 {
-	for (int i = multiple*multiple; i < taille; i += multiple)
+    // Les indices commencent à 0; ajouter 1 pour obtenir le nombre premier
+    unsigned nombrePremier = indiceNbrPremier + 1;
+
+    // Parcourir tous les nombres composés
+    // Nous avons essayé de rendre la clause plus lisible à cause du nom des variables
+	for (unsigned indiceNbrCompose = indiceNbrPremier + nombrePremier ;
+         indiceNbrCompose < taille ;
+         indiceNbrCompose += nombrePremier)
 	{
-		tab[i] = NBR_PREMIER;
+        tableau[indiceNbrCompose] = NBR_NON_PREMIER;
 	}
 }
 
@@ -63,13 +71,21 @@ void EliminerMultiples(char tab[], const unsigned taille, const unsigned multipl
  *      - taille
  */
 
-/// EffectuerCribleSur
-/// \param tab
+/// EffectuerCribleSur (Crible Eratosthène)
+/// \param tableau
 /// \param taille
-void EffectuerCribleSur(char tab[], const unsigned taille)
+void EffectuerCribleSur(char tableau[],
+                        unsigned taille)
 {
-	for (int iterateur = 0; iterateur < TAILLE_NBRS_PREMIERS; ++iterateur)
+    // Vérifier les indices de 0 à 6 (valeurs 1 à 7), et éliminer leurs multiples
+	for (int indice = 0; indice <= NBR_INDICE_ERATOSTHENE_MAX; ++indice)
 	{
-		EliminerMultiples(tab, taille, NBRS_PREMIERS[iterateur++]);
+        // Vérifier si la valeur dans l'indice n'a pas encore été éliminée
+        if(tableau[indice] != NBR_NON_PREMIER)
+        {
+            EliminerMultiples(tableau,
+                              taille,
+                              indice);
+        }
 	}
 }

@@ -13,13 +13,20 @@
 #ifndef LABO6CRIBLE_CRIBLE_H
 #define LABO6CRIBLE_CRIBLE_H
 
-const char NBR_NON_PREMIER = 'O';
-const char NBR_PREMIER = 'X';
-const unsigned TAILLE_NBRS_PREMIERS = 4;
-const unsigned NBRS_PREMIERS[TAILLE_NBRS_PREMIERS]= {2, 3, 5, 7};
+const char NBR_PREMIER = 'O';
+const char NBR_NON_PREMIER = 'X';
 
-void EliminerMultiples(char tab[], const unsigned taille, const unsigned multiple);
-void EffectuerCribleSur(char tab[], const unsigned taille);
-char* IninitialiserTableau(const unsigned taille);
+// TODO: pas besoin de déclarer ça en hardcodé. On peut parcourir les indices de 1 à 7, en vérifiant si l'indice i a déjà été coché
+const unsigned NBR_INDICE_ERATOSTHENE_MAX = 6;
+
+void EliminerMultiples(char tableau[],
+                       unsigned taille,
+                       unsigned indiceNbrPremier);
+
+void EffectuerCribleSur(char tableau[],
+                        unsigned taille);
+
+void InitialiserTableau(char tableau[],
+                        unsigned taille);
 
 #endif //LABO6CRIBLE_CRIBLE_H
