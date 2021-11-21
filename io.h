@@ -22,6 +22,8 @@
 const int NOMBRES_PAR_LIGNE                         = 10;
 const char CARACTERE_ESPACE                         = ' ';
 const char CARACTERE_FIN_PROMPT                     = ':';
+
+// TODO: bouger les const string dans un header dictionnaire
 const std::string MESSAGE_PROMPT_NOMBRE             = "Veuillez entrer un nombre";
 const std::string MESSAGE_ERREUR_NOMBRE             = "Ce nombre n'est pas valable!";
 
