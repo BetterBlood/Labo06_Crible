@@ -1,30 +1,36 @@
 /* 
  ----------------------------------------------------------------------------------- 
- Nom du fichier :  $fileRelativePath()$ $end$
- Auteur(s)      : Pedro Alves da Silva
- Date creation  : $date("dd-MM-YYYY")$
- 
- Description    : <à compléter> 
- 
- Remarque(s)    : TODO: à ne pas effacer!
-                  la méthode LireUnNombre prend en compte un paramètre "afficherBornes"
-                  Pour ce laboratoire, elles seront toujours affichées, mais nous
-                  l'avons ajouté pour des soucis de réutilisation
- 
- Compilateur    : Mingw-w64 g++ 11.1.0  
+ Nom du fichier  : main.cpp
+ Auteur(s)       : Pedro Alves da Silva, Jeremiah Steiner
+ Date creation   : 18 novembre 2021
+ Nom laboratoire : Labo 6-D - Crible
+ Description     : Fichier source permettant la gestion de l'affichage des données,
+                   qu'elles soient messages ou tableau
+ Remarque(s)     : -
+ Compilateur     : gcc 9.3.0 on Ubuntu 20.04, Mingw-w64 g++ 8.1.0 on Windows, Cmake
  ----------------------------------------------------------------------------------- 
 */
+
 #include "io.h"
 #include <cmath>
 
 using namespace std;
 
+/*
+ * Constantes utilisées au sein du fichier source
+ */
+const int NOMBRES_PAR_LIGNE               = 10;
+const char CARACTERE_ESPACE               = ' ';
+const char CARACTERE_FIN_PROMPT           = ':';
+const char NBR_PREMIER                    = 'O';
+const char NBR_NON_PREMIER                = 'X';
 
 /// Lis un nombre entré par l'utilisateur, et retourne ledit nombre
-/// \param msgPrompt Message de demande
-/// \param msgErreur Message à Afficher en cas d'erreur
 /// \param borneMin Valeur minimale acceptable (inclue)
 /// \param borneMax Valeur maximale acceptable (inclue)
+/// \param msgPrompt Message de demande
+/// \param msgErreur Message à Afficher en cas d'erreur
+/// \param afficherBornes Est-ce que les bornes sont affichées?
 /// \remark Vérification des bornes: [borneMin; borneMax]
 /// \return Le nombe récupéré du flux
 int LireUnNombre(int borneMin,
@@ -33,7 +39,7 @@ int LireUnNombre(int borneMin,
                  const std::string &msgErreur,
                  bool afficherBornes)
 {
-	bool erreur = false;
+	bool erreur;
 	int nombreLu;
 
 	do {
@@ -72,13 +78,13 @@ int LireUnNombre(int borneMin,
 /// Affiche toutes les valeurs dans le tableau fourni en paramètres
 /// \param tableau Tableau à lire
 /// \param taille Taille du tableau
-void AfficherTableau(char tableau[],
-                     unsigned int taille)
+void AfficherTableau(const bool tableau[],
+                     size_t taille)
 {
     bool retourLigne = false;
 
 	// Parcourir toutes les cases du tableau
-	for(int i = 0; i < taille; ++i)
+	for(size_t i = 0; i < taille; ++i)
 	{
 		// Déterminer s'il nous faudra faire un saut de ligne
         // Si on en a besoin, alors on affecte la variable booléenne pour vérifier plus tard si on a besoin d'un espace
@@ -94,12 +100,10 @@ void AfficherTableau(char tableau[],
 		}
 
         // Afficher la valeur à l'index i
-        Afficher(tableau[i], false);
+        Afficher(tableau[i] ? NBR_PREMIER : NBR_NON_PREMIER, false);
 
         // Afficher l'espace après la valeur que si on n'a pas besoin de faire un retour de ligne
-        //if(!retourLigne) {
-            Afficher(CARACTERE_ESPACE, false);
-        //}
+        Afficher(CARACTERE_ESPACE, false);
 	}
 
     // Ajouter une nouvelle ligne pour terminer l'affichage du tableau
@@ -139,57 +143,63 @@ void Afficher(char caractere,
 }
 
 
-/// AfficherNombresPremiers affiche l'indice + 1de chaque caractère passé en param
-/// \param tab
-/// \param taille
-/// \param caractereAComparer
-void AfficherNombresPremiers(const char tab[], unsigned taille, char caractereAComparer)
+/// Affiche l'indice + 1de chaque caractère passé en param
+/// \param tab Tableau
+/// \param taille Taille du tableau
+void AfficherNombresPremiers(const bool tab[],
+							 size_t taille)
 {
-    string listeDesNombresPremier = "";
-    unsigned nbrDeNombresPremier = 0;
+    string msgListeNbrPrem;
+    unsigned nbrNbrPrem = 0; // Nombre de nombres premiers contenus dans le tableau
     int dernierI = 2; // car le premier nombre premier est 2 (donc première fois que dernierI est initialiser)
 
-    for (unsigned i = 0; i < taille; ++i)
+    for (size_t i = 0; i < taille; ++i)
     {
-        if (tab[i] == caractereAComparer)
+		// Si tab[i] est un nombre premier
+        if (tab[i])
         {
-            listeDesNombresPremier.append(EspaceNecessairePourAffichage(i + 1));
-            listeDesNombresPremier.append(to_string(i + 1));
+			// Récupérer le nombre d'espaces à afficher pour l'espacement, et ajouter au string du message à afficher
+            msgListeNbrPrem.append(string(EspacementAvantNombre(i + 1), CARACTERE_ESPACE));
+            msgListeNbrPrem.append(to_string(i + 1));
 
-            ++nbrDeNombresPremier;
+            ++nbrNbrPrem;
             dernierI = i;
         }
 
-        if (nbrDeNombresPremier % NOMBRES_PAR_LIGNE == 0 && dernierI == i)
+		// Ajouter une nouvelle ligne chaque 10 nombres premiers
+        if (nbrNbrPrem % NOMBRES_PAR_LIGNE == 0 && dernierI == i)
         {
-            listeDesNombresPremier.append("\n");
+            msgListeNbrPrem.append("\n");
         }
     }
 
-    // TODO: afficher "nbres premiers" au singulier si nbrDeNombresPremier == 1
-    Afficher(MESSAGE_NOMBRES_PREMIER_1 + to_string(nbrDeNombresPremier) + MESSAGE_NOMBRES_PREMIER_2, true);
-    Afficher(listeDesNombresPremier, true);
+    Afficher(MESSAGE_NOMBRES_PREMIER_1 + to_string(nbrNbrPrem), false);
+
+	// Afficher le message au singulier ou au pluriel selon le nombre de nombres premiers
+	if(nbrNbrPrem == 1)
+	{
+		Afficher(MESSAGE_NOMBRES_PREMIER_2_SING);
+	}
+	else
+	{
+		Afficher(MESSAGE_NOMBRES_PREMIER_2_PLUR);
+	}
+
+	// Afficher la liste de nombres premiers identifiés
+    Afficher(msgListeNbrPrem, true);
 }
 
 
-/// EspaceNecessairePourAffichage permet d'obtenir le nombre d'espace nécessaire pour l'affichage de chiffre
+/// Permet d'obtenir le nombre d'espace nécessaire pour l'affichage de chiffre
 /// \param chiffreAffiche
-/// \param maxDigit
+/// \param espacementMax
 /// \return
-// TODO: rennomer fonction
-string EspaceNecessairePourAffichage(int chiffreAffiche, int maxDigit)
+size_t EspacementAvantNombre(int chiffreAffiche,
+							 int espacementMax)
 {
     if (chiffreAffiche <= 0)
     {
-        return " ";
+        return 1;
     }
-
-    string nbrEspace = "";
-
-    for (int i = maxDigit - log10(chiffreAffiche); i > 0; --i)
-    {
-        nbrEspace += " ";
-    }
-
-    return nbrEspace;
+    return espacementMax - (int)log10(chiffreAffiche);
 }

@@ -1,11 +1,11 @@
 /*
  -----------------------------------------------------------------------------------
- Nom du fichier  : main.cpp
+ Nom du fichier  : io.h
  Auteur(s)       : Pedro Alves da Silva, Jeremiah Steiner
  Date creation   : 18 novembre 2021
  Nom laboratoire : Labo 6-D - Crible
- Description     :
- Remarque(s)     : <à compléter>
+ Description     : Header pour io.cpp
+ Remarque(s)     : -
  Compilateur     : gcc 9.3.0 on Ubuntu 20.04, Mingw-w64 g++ 8.1.0 on Windows, Cmake
  -----------------------------------------------------------------------------------
 */
@@ -16,19 +16,9 @@
 #include <iostream>
 #include <limits>
 #include <string>
+#include "dictionnaire.h"
 
 #define VIDER_BUFFER() std::cin.ignore(std::numeric_limits<streamsize>::max(), '\n')
-
-const int NOMBRES_PAR_LIGNE                         = 10;
-const char CARACTERE_ESPACE                         = ' ';
-const char CARACTERE_FIN_PROMPT                     = ':';
-
-// TODO: bouger les const string dans un header dictionnaire
-const std::string MESSAGE_PROMPT_NOMBRE             = "Veuillez entrer un nombre";
-const std::string MESSAGE_ERREUR_NOMBRE             = "Ce nombre n'est pas valable!";
-
-const std::string MESSAGE_NOMBRES_PREMIER_1         = "Il y a ";
-const std::string MESSAGE_NOMBRES_PREMIER_2         = " nombres premiers";
 
 int LireUnNombre(int borneMin,
 				 int borneMax,
@@ -42,14 +32,14 @@ void Afficher(const std::string& message,
 void Afficher(char caractere,
               bool retourLigne = true);
 
-void AfficherTableau(char tableau[],
-                     unsigned taille);
+void AfficherTableau(const bool tableau[],
+                     size_t taille);
 
-void AfficherNombresPremiers(const char tab[],
-                             unsigned taille,
-                             char caractereAComparer);
+void AfficherNombresPremiers(const bool tab[],
+							 size_t taille);
 
-std::string EspaceNecessairePourAffichage(int chiffreAffiche, int maxDigit = 4);
+size_t EspacementAvantNombre(int chiffreAffiche,
+							 int espacementMax = 4);
 
 void NouvelleLigne();
 

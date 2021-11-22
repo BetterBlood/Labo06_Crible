@@ -4,8 +4,10 @@
  Auteur(s)       : Pedro Alves da Silva, Jeremiah Steiner
  Date creation   : 18 novembre 2021
  Nom laboratoire : Labo 6-D - Crible
- Description     :
- Remarque(s)     : <à compléter>
+ Description     : Programme qui utilise le crible d'Eratosthène pour identifier tous
+                   tous les nombres premiers dans un tableau C, avec une taille
+                   maximale de 100 nombres
+ Remarque(s)     : -
  Compilateur     : gcc 9.3.0 on Ubuntu 20.04, Mingw-w64 g++ 8.1.0 on Windows, Cmake
  ----------------------------------------------------------------------------------- 
 */
@@ -17,22 +19,18 @@
 
 using namespace std;
 
+/// Fonction principale
+/// \return Status de l'exécution du programme
 int main()
 {
     /*
      * Déclaration des constantes locales
      */
     const unsigned TABLEAU_TAILLE_MIN           = 2;
-    const unsigned TABLEAU_TAILLE_MAX           = 300;
-    const string MESSAGE_DEMANDER_NOMBRE        = "Entrez le nombre de valeurs";
-    const string MESSAGE_INITIALISATION_TABLEAU = "initialisation du tableau";
-    const string MESSAGE_CRIBLAGE_TABLEAU       = "Criblage du tableau";
-    const string MESSAGE_FIN                    = "Veuillez appuyer sur enter pour quitter le programme";
-    const string MESSAGE_DEMARRAGE              = "Labo 6D - Identification de tous les nombres premiers dans "
-                                                  "l'intervalle 2 à n en utilisant la méthode du crible Eratosthène";
+    const unsigned TABLEAU_TAILLE_MAX           = 100;
 
     // Déclarer le tableau
-    static char tableau[TABLEAU_TAILLE_MAX];
+    bool tableau[TABLEAU_TAILLE_MAX];
 
     /*
      * Démarrage du programme
@@ -44,7 +42,7 @@ int main()
      */
 
     // Demander taille de tableau
-	const unsigned tailleTableau = LireUnNombre(TABLEAU_TAILLE_MIN,
+	const size_t tailleTableau = LireUnNombre(TABLEAU_TAILLE_MIN,
                                                 TABLEAU_TAILLE_MAX,
                                                 MESSAGE_DEMANDER_NOMBRE);
 
@@ -62,7 +60,7 @@ int main()
 
     // Toutefois, le premier indice (index 0) sera toujours non-premier, car il réprésente 1,
     // qui est un multiple de tous les nombres
-    tableau[0] = NBR_NON_PREMIER;
+    tableau[0] = false;
 
 	// Démarrer l'algorithme de crible avec le tableau
 	EffectuerCribleSur(tableau, tailleTableau);
@@ -72,8 +70,8 @@ int main()
     AfficherTableau(tableau, tailleTableau);
     NouvelleLigne();
 
-	// TODO : Afficher les nombres premiers + message descriptif
-    AfficherNombresPremiers(tableau, tailleTableau, NBR_PREMIER);
+	// Afficher les nombres premiers identifiés dans le tableau
+	AfficherNombresPremiers(tableau, tailleTableau);
 
     /*
      * Fin du programme
